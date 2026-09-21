@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Postbird 交互式体验：一分钟感受每日简报、行动雷达和上下文回复如何把邮箱变成行动。">
+  <meta name="description" content="Postbird 是本地优先的 AI 邮件与材料整理助手。无需登录，用虚构样例体验今日行动、材料整理与回复草稿。">
   <meta name="theme-color" content="#071426">
   <title>Postbird Live Demo · 从收件箱到行动</title>
   <link rel="icon" href="../assets/brand/postbird-logo.png">
@@ -20,37 +20,42 @@
     </a>
     <div class="top-actions">
       <span class="privacy-pill"><i></i> 本地模拟 · 无需登录</span>
+      <a class="github-link" href="https://xplore-lab.github.io/demo-postbird/" target="_blank" rel="noreferrer">设计护栏 <span>↗</span></a>
       <a class="github-link" href="https://github.com/Xplore-LAB/postbird" target="_blank" rel="noreferrer">GitHub <span>↗</span></a>
     </div>
   </header>
 
   <main>
     <section class="hero">
-      <div class="eyebrow"><span>LIVE DEMO</span><b>22 个 AI 办公工具协同</b></div>
-      <h1>把校园邮箱变成<br><em>会行动的 AI 工作台。</em></h1>
-      <p>一句话整理通知、追踪截止日期、汇总材料、起草回复，<br>继续交付真实的 Word、Excel、PPT 和邮件文件。</p>
-      <div class="hero-stats" aria-label="Postbird 项目数据">
-        <div><strong>22</strong><span>办公工具</span></div>
-        <div><strong>135</strong><span>测试通过</span></div>
-        <div><strong>0</strong><span>云端上传</span></div>
-        <div><strong>1</strong><span>句话启动</span></div>
+      <div class="eyebrow"><span>POSTBIRD 信鸽</span><b>本地优先的 AI 邮件与材料整理助手</b></div>
+      <h1>邮件里的事，<br><em>整理成下一步。</em></h1>
+      <p>今天要处理什么、材料还缺什么、邮件该怎么回复。<br>先用虚构样例看成果，再决定是否连接自己的邮箱。</p>
+      <div class="hero-stats" aria-label="Postbird 使用方式">
+        <div><strong>插件</strong><span>DeepSeek Harness</span></div>
+        <div><strong>独立版</strong><span>本地工作台预览</span></div>
+        <div><strong>Demo</strong><span>无需登录的模拟体验</span></div>
       </div>
-      <button class="hero-cta" id="heroCta">开始体验 <span>↓</span></button>
+      <button class="hero-cta" id="heroCta">体验材料整理 <span>↓</span></button>
+      <div class="quick-starts" role="group" aria-label="选择核心成果">
+        <button data-quick-scene="daily">今日行动<span>简报与截止事项</span></button>
+        <button data-quick-scene="roleCounselor">材料整理<span>提交台账与补件提醒</span></button>
+        <button data-quick-scene="reply">上下文回复<span>线程摘要与回复草稿</span></button>
+      </div>
     </section>
 
     <section class="demo-section" id="demo">
       <div class="section-heading">
         <div>
           <span class="section-kicker">TRY IT YOURSELF</span>
-          <h2>先选择你的校园身份</h2>
+          <h2>选择场景，看看具体成果</h2>
         </div>
-        <p>所有数据均为虚构示例，交互只发生在你的浏览器中。</p>
+        <p>预设虚构数据与示例文件；不连接邮箱、不调用模型、不发送邮件。请勿输入真实个人信息。</p>
       </div>
 
       <div class="identity-grid" role="group" aria-label="选择校园身份">
         <button class="identity" data-scene="roleUndergrad"><span>本</span><b>本科生</b><small>通知与截止日期</small></button>
-        <button class="identity active" data-scene="roleGraduate"><span>研</span><b>研究生</b><small>导师意见与论文版本</small></button>
-        <button class="identity" data-scene="roleCounselor"><span>导</span><b>辅导员</b><small>材料统计与个性催办</small></button>
+        <button class="identity" data-scene="roleGraduate"><span>研</span><b>研究生</b><small>导师意见与论文版本</small></button>
+        <button class="identity active" data-scene="roleCounselor"><span>导</span><b>辅导员</b><small>材料统计与个性催办</small></button>
         <button class="identity" data-scene="roleAdmin"><span>行</span><b>行政老师</b><small>报名汇总与交付</small></button>
         <button class="identity" data-scene="roleTeacher"><span>教</span><b>教学老师</b><small>课程邮箱与学生状态</small></button>
         <button class="identity" data-scene="roleProfessor"><span>授</span><b>教授</b><small>决策事项与任务委派</small></button>
@@ -120,7 +125,7 @@
 
         <aside class="result-panel">
           <div class="window-bar">
-            <div class="window-title">实时结果</div>
+            <div class="window-title">模拟结果 · 虚构样例</div>
             <span class="status-chip" id="statusChip">等待指令</span>
           </div>
           <div class="result-content" id="resultContent"></div>
@@ -142,8 +147,8 @@
 
     <section class="cta-section">
       <img src="../assets/brand/postbird-logo.png" alt="Postbird 信鸽">
-      <div><span>准备让真实工作流动起来？</span><h2>把 Postbird 装进 DeepSeek Harness</h2></div>
-      <a href="https://github.com/Xplore-LAB/postbird#-三步开始" target="_blank" rel="noreferrer">三步开始 <b>↗</b></a>
+      <div><span>准备连接自己的邮箱？</span><h2>选择 Harness 插件或独立预览版</h2><p>本地保存索引与文件。使用远程模型会发送所选内容，须查看对应版本的数据与授权说明。</p></div>
+      <a href="https://github.com/Xplore-LAB/postbird#choose-edition" target="_blank" rel="noreferrer">选择使用方式 <b>↗</b></a>
     </section>
   </main>
 
