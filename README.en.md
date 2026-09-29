@@ -12,7 +12,7 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
 [![release](https://img.shields.io/badge/release-v1.5.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
-[![tests](https://img.shields.io/badge/checks-135%20passing-32b643)](tests/)
+[![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#22-tools-working-together)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
 [![local first](https://img.shields.io/badge/data-local--first-1683c4)](#safe-by-default)

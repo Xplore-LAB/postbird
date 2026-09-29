@@ -33,9 +33,8 @@ for (const tool of [
   assert.match(js, new RegExp(tool), `missing flagship workflow ${tool}`);
 }
 
-assert.match(html, /22 个 AI 办公工具协同/, "hero should carry the current tool count");
-assert.match(html, /135/, "hero should carry the current test count");
-assert.match(html, /把校园邮箱变成/, "hero should lead with the campus inbox-to-action promise");
+assert.match(html, /邮件里的事/, "hero should explain the inbox-to-action promise");
+assert.match(html, /本地模拟 · 无需登录/, "demo must disclose that it uses simulated data");
 
 for (const asset of ["styles.css", "app.js", "../assets/brand/postbird-logo.png"]) {
   const resolved = path.resolve(demo, asset);

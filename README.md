@@ -12,13 +12,15 @@
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
 [![release](https://img.shields.io/badge/release-v1.5.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
-[![tests](https://img.shields.io/badge/checks-135%20passing-32b643)](tests/)
+[![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#all-tools)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
 [![local first](https://img.shields.io/badge/data-local--first-1683c4)](#安全可控)
 [![node](https://img.shields.io/badge/node-%3E%3D%2020-32b643)](package.json)
 
 **简体中文** · [English](README.en.md)
+
+**黑客松材料：** [项目报告书](docs/HACKATHON.zh-CN.md) · [Agent Skill](SKILL.md) · [Demo 录制脚本](docs/DEMO-SCRIPT.zh-CN.md) · [征文初稿](docs/ESSAY-DRAFT.zh-CN.md)
 
 </div>
 
