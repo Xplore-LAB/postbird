@@ -112,6 +112,10 @@ Wait for the user's decision
 | Insights and organization | `office_stats_overview`, `office_stats_track`, `office_inbox_clean` |
 | Office deliverables | `office_sheet`, `office_docgen`, `office_pptx`, `office_template` |
 
+Collection ledger IDs (`collectionId`) accept 1–80 ASCII letters, numbers, `_`, or `-`. Invalid or overlong IDs are rejected so filename replacement or truncation cannot overwrite another ledger.
+
+Existing ledger files are neither migrated nor deleted. If an older ID contained invalid characters or exceeded 80 characters, use the `collectionId` already stored in its ledger JSON (the filename without `.json`). For example, an old `project:a` ledger saved as `project_a.json` remains accessible as `project_a`.
+
 You can keep using natural language. Postbird composes these tools for each task.
 
 ## Five-Minute Start

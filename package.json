@@ -14,7 +14,7 @@
     "setup": "node scripts/postbird.mjs setup",
     "doctor": "node scripts/postbird.mjs doctor",
     "demo": "node scripts/postbird.mjs demo",
-    "test": "node --test tests/e2e.mjs tests/cli.mjs tests/demo.mjs"
+    "test": "node --test tests/e2e.mjs tests/cli.mjs tests/demo.mjs tests/collection.mjs"
   },
   "license": "MIT",
   "engines": {

@@ -128,6 +128,10 @@ Postbird 将邮件理解、行动管理和 Office 交付放进同一个对话入
 | 洞察与整理 | `office_stats_overview`、`office_stats_track`、`office_inbox_clean` |
 | Office 交付 | `office_sheet`、`office_docgen`、`office_pptx`、`office_template` |
 
+材料台账的 `collectionId` 使用 1–80 个英文字母、数字、`_` 或 `-`。非法字符与超长 ID 会明确报错，避免不同台账因文件名替换或截断而互相覆盖。
+
+旧版已保存的台账不会被迁移或删除。若原始 ID 含非法字符或超过 80 个字符，请改用台账 JSON 中已存的 `collectionId`（即 `.json` 文件名去掉扩展名）；例如原 `project:a` 保存为 `project_a.json` 时，使用 `project_a` 继续访问。
+
 <a id="five-minute-start"></a>
 
 ## 🚀 五分钟开始
