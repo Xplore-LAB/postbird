@@ -113,6 +113,12 @@ async function setup() {
 
   if (!dryRun && path.resolve(target) !== rootDir) {
     await fsp.mkdir(target, { recursive: true });
+    // Skill directories are replaced rather than merged: a renamed or
+    // dropped skill must not survive as a stale leftover from the previous
+    // version, and the provider scans both directories.
+    for (const item of ["skills", "skills-zh"]) {
+      await fsp.rm(path.join(target, item), { recursive: true, force: true });
+    }
     for (const item of ["lib", "scripts", "skills", "skills-zh", "example", "docs", "package.json", "README.md", "README.en.md", "SKILL.md", "LICENSE", "SECURITY.md"]) {
       const source = path.join(rootDir, item);
       if (await exists(source)) {
