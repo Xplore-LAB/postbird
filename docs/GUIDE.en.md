@@ -1,5 +1,9 @@
 # Postbird English Guide
 
+## Ordinary email in DSH
+
+Preview one email with `office_mail_preview({to: "person@example.com", subject: "Meeting", body: "See you tomorrow at 3 PM."})`. Add `attachments` and an explicit `workDir` when needed. Show the sender, recipient, complete body and attachment list before requesting confirmation. After the user approves that preview, call `office_mail_send` with the returned `previewId`, `mode: "send"`, and `confirm: true`. The default mode writes EML drafts without sending. Report each recipient's SMTP acceptance or error; do not claim receipt or reading. For partial failure, prepare and confirm a new preview only for remaining recipients. Successful previews cannot be replayed.
+
 [Back to README](../README.en.md) · [中文指南](GUIDE.zh-CN.md)
 
 This guide covers installer options, optional mailbox access, all 22 tools, configuration, storage, and troubleshooting. For a first run, you only need the “Install and Verify” section.

@@ -11,7 +11,7 @@
 [![五分钟开始](https://img.shields.io/badge/五分钟开始-安装指南-9f86ff?style=for-the-badge)](#five-minute-start)
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
-[![release](https://img.shields.io/badge/release-v1.7.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
+[![release](https://img.shields.io/badge/release-v1.8.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
 [![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#all-tools)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
@@ -192,6 +192,12 @@ node scripts/postbird.mjs setup --help
 </details>
 
 ## 🧠 技能随插件一起装
+
+### 先发一封邮件
+
+在 DSH 中说：“给 person@example.com 写一封邮件，主题是会议确认，正文是明天下午三点见，先给我预览。”Postbird 会展示发件人、收件人、完整正文和附件。确认后才通过 SMTP 发送；默认草稿模式只保存 `.eml` 文件。
+
+普通邮件直接使用 `to`、`subject`、`body`，不需要准备名单表。详细配置、工具参数及本机 DSH 验证方法见[发件适配说明](docs/DSH-MAIL-ADAPTATION.zh-CN.txt)。
 
 装上 Postbird，装的不只是 22 个工具，还有一整套**随插件分发的工作方法**。DSH 的技能目录里会多出 4 个中文技能，模型据此判断什么时候该用哪个工具、该怎么用：
 

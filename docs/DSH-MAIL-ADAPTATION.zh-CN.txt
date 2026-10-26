@@ -1,0 +1,79 @@
+Postbird：DSH 发邮件功能适配
+2026-10-26
+
+范围
+  以 origin/main 的 f3823e8（1.7.0）为基线。
+  本轮只做好发邮件：准备 → 预览 → 确认 → SMTP 投递 → 逐封回执。
+  看邮件、独立 UI、工作台和其他扩展留到后续。
+
+为什么要改
+  DSH 原生工具执行通过 output.render 向模型投递结果。
+  旧预览 render 只有有效行数，没有收件人、主题和正文。
+  旧发件 render 只有成功数量，没有逐封错误和 Message-ID。
+  原工具以名单和模板为入口，普通单封邮件也要构造一行数据。
+  原 SMTP 日志在整批结束后写入，中断会丢失此前的发送记录。
+
+本轮实现
+  office_mail_preview 新增 to / subject / body，现有批量用法保留。
+  地址来源必须三选一；主题和正文分别选择普通文本或模板，不能混传。
+  普通文本中的 {{...}} 按原样保留，不当作模板替换。
+  原生预览显示发件人、收件人、完整正文、附件和 previewId。
+  预览样本至少一封；群发明确提示仅展示样本。
+  原生回执逐封显示 SMTP 接受结果、Message-ID 或错误；EML 显示路径。
+  草稿始终标记未发送；SMTP 接受不等于对方收到或读过。
+  每封 SMTP 操作后立即写日志，取消后保留已经完成的结果。
+  同一预览使用发送锁；有成功记录的预览拒绝重发，避免整批重复发送。
+  日志写入失败会保留发送锁，要求核对邮箱，避免盲目重试。
+  中文与英文 delivery 技能同步说明单封发件、明确 send 模式和失败处理。
+
+单封工具调用
+  1. office_mail_preview
+     {"to":"person@example.com","subject":"会议确认","body":"明天下午三点见。"}
+  2. 向用户展示预览，等用户明确确认。
+  3. office_mail_send
+     {"previewId":"使用第一步返回的真实ID","mode":"send","confirm":true}
+
+附件
+  preview 增加 attachments 数组和 workDir；沿用现有工作目录边界。
+  群发 recipients / recipientsFile、subjectTemplate / bodyTemplate 保持兼容。
+  默认 mode=draft，只保存 EML。正文、地址或附件变更后重新生成预览。
+
+SMTP 配置
+  在当前 DSH profile 的 tool-office 插件配置中设置 smtpHost、smtpPort、
+  smtpSecure、smtpUser、fromAddress；授权码通过 DSH_SMTP_PASS 注入。
+  465 通常 smtpSecure=true；587 通常 smtpSecure=false 并由 Nodemailer 协商 STARTTLS。
+  systemd 启动的 DSH 要在服务环境注入授权码，交互终端的 export 不会修改已运行服务。
+  密钥不放进对话、源码或此文档。
+
+验证
+  npm test
+    原有 140 项端到端断言通过；运行器 9 通过、1 跳过、0 失败。
+    跳过项是正式 YAML 解析器对比，本次环境没有可用 parse()。
+
+  DSH_RUNTIME_ROOT=/path/to/@deepseek-ai/dsh npm run test:dsh-mail
+    使用真实 Cordis Context、SystemPrompt、ToolRuntime 和 SkillRegistry。
+    本机 DSH 版本 0.2.1-rc.2；工具 peer 使用本机 DSH 的实际版本。
+    验证插件装载后注册 22 工具、4 技能。
+    通过原生 ctx.tools.execute 验证完整预览、确认检查、草稿、SMTP 成功、
+    部分拒收、逐封回执、重复发送拦截、取消保留日志、参数冲突、预览过期。
+    SMTP 服务只监听 127.0.0.1，测试账号为 .invalid，不连接外部邮箱。
+    测试清理临时目录和 SMTP 连接。
+
+安装到 DSH Web
+  git clone https://github.com/Xplore-LAB/postbird.git
+  cd postbird
+  npm run setup -- --profile web
+  npm run doctor -- --profile web
+  重启对应的 DSH Web 进程或服务。
+
+升级已有安装
+  在无本地未提交改动的源码目录中运行 git pull --ff-only，
+  然后重新执行 setup、doctor 并重启 DSH。
+  有未提交改动时先保存自己的修改，不要直接覆盖。
+
+验证边界
+  本次适配已在 DSH 0.2.1-rc.2 的真实工具注册器中验证，
+  并通过本机 SMTP 协议测试；没有向外部收件人发信。
+  自然语言模型回合及不同邮箱服务商的生产认证仍需在各自环境验证。
+  确认仍由 DSH 对话中的用户与 Agent 遵守，confirm=true 不构成独立的人工授权凭证。
+  SMTP 连接在服务器接受后断开可能导致结果不确定；不能承诺全局 exactly-once。

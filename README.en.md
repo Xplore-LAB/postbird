@@ -11,7 +11,7 @@
 [![Quick Start](https://img.shields.io/badge/Quick%20Start-Five%20Minutes-9f86ff?style=for-the-badge)](#five-minute-start)
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
-[![release](https://img.shields.io/badge/release-v1.7.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
+[![release](https://img.shields.io/badge/release-v1.8.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
 [![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#22-tools-working-together)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
@@ -25,6 +25,8 @@
 ---
 
 ## ⚡ Understand Postbird in One Minute
+
+For ordinary email in DSH, ask to preview a message with its recipient, subject and body. The plugin supports `to`, `subject`, `body` and optional attachments without a recipient spreadsheet. After explicit confirmation, `office_mail_send` with `mode: "send"` submits it over SMTP; its default draft mode only saves EML files. Native tool results include the complete preview and per-recipient outcomes. SMTP acceptance does not prove receipt or reading.
 
 **Postbird is a local-first AI inbox and office assistant for DeepSeek Harness.** It turns requirements scattered across messages, long threads, and attachments into actions, replies, trackers, and finished deliverables.
 

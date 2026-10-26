@@ -58,6 +58,16 @@ npm run doctor -- --profile web
 - 可选的实时收件能力
 - 可选的实时发件能力
 
+### 普通邮件：预览后发送
+
+对 DSH 说：“给 person@example.com 写一封邮件，主题是会议确认，正文是明天下午三点见，先给我预览。”
+
+插件调用 `office_mail_preview` 时可直接传 `to`、`subject`、`body`；附件通过 `attachments` 指定，并提供 `workDir`。批量个性化邮件仍用 `recipients` / `recipientsFile` 和模板参数。
+
+预览会显示发件人、收件人、完整正文、附件和预览 ID。用户确认后，调用 `office_mail_send` 时必须指定 `mode: "send"` 和 `confirm: true`。默认 `mode: "draft"` 只保存 EML，不发送。
+
+发件结果逐封报告 SMTP 接受状态或错误，不代表对方已收件或已读。已成功发送过的预览不能直接重发；部分失败时，仅为剩余对象准备新预览并再次确认。发送中断会保留此前的逐封记录。
+
 ### 技能目录
 
 安装器会把插件自带的技能一并装进 DSH。重启 DSH 后，模型能直接用这 4 个中文技能：

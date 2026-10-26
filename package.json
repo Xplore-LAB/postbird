@@ -1,6 +1,6 @@
 {
   "name": "@local/dsh-plugin-office",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "description": "A local-first campus AI inbox and office workspace for DeepSeek Harness, turning email into cited actions and finished work.",
   "type": "module",
   "main": "lib/index.js",
@@ -14,7 +14,8 @@
     "setup": "node scripts/postbird.mjs setup",
     "doctor": "node scripts/postbird.mjs doctor",
     "demo": "node scripts/postbird.mjs demo",
-    "test": "node --test tests/e2e.mjs tests/cli.mjs tests/demo.mjs tests/skill-provider.mjs"
+    "test": "node --test tests/e2e.mjs tests/cli.mjs tests/demo.mjs tests/skill-provider.mjs",
+    "test:dsh-mail": "node tests/dsh-mail.mjs"
   },
   "license": "MIT",
   "engines": {

@@ -27,6 +27,16 @@ metadata:
 
 ## 工作流
 
+### 在 DSH 发一封普通邮件
+
+1. 使用 `office_mail_preview({to: "person@example.com", subject: "主题", body: "正文"})`；有附件时增加 `attachments` 和明确的 `workDir`。不必为单封邮件创建 CSV。
+2. 把工具返回的发件人、收件人、主题、完整正文和附件展示给用户，明确“尚未发送”，保留 `previewId`。正文、地址或附件变更后重新预览。
+3. 用户明确确认这份预览后，调用 `office_mail_send({previewId: "实际预览ID", mode: "send", confirm: true})`。务必指定 `mode: "send"`；默认模式只保存 EML 草稿。
+4. 按逐封回执说明成功和失败原因。“SMTP 已接受”不代表对方已收件或已读。部分失败不要重发整个批次；核对结果后，仅为未发送对象重新预览并确认。
+5. 缺少 SMTP 配置时说明缺失项；不要向用户索取授权码放进聊天，也不要把草稿报告为发送成功。
+
+### 其他交付
+
 1. 先确认事实与收件人来自已批准上下文或 `postbird-evidence`。
 2. 回复类：需要线程上下文用 `office_context_reply`；独立草稿用 `office_reply_draft`。
 3. 表格交接用 `office_sheet`；报告 / 公文用 `office_docgen`；演示概览用 `office_pptx`。

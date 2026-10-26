@@ -18,6 +18,8 @@ Use this skill when the user asks for a **usable artifact or communication**, no
 
 ## Workflow
 
+For a single email, call `office_mail_preview` with `to`, `subject`, `body`, and optional `attachments`/`workDir`. Show the sender, recipient, complete body and attachments. After explicit approval of that preview, call `office_mail_send` with its actual `previewId`, `mode: "send"`, and `confirm: true`. The default mode only writes drafts. Report SMTP acceptance and individual failures; acceptance does not prove receipt or reading. Never retry an entire partially successful batch. Create a fresh preview only for remaining recipients and obtain confirmation again.
+
 1. Confirm that the facts and recipients come from approved context or `postbird-evidence`.
 2. For replies, use `office_context_reply` when thread context matters; use `office_reply_draft` for a standalone draft.
 3. For tabular hand-off, use `office_sheet`; for reports/letters use `office_docgen`; for presentation summaries use `office_pptx`.
