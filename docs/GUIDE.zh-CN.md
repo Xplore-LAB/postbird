@@ -58,6 +58,18 @@ npm run doctor -- --profile web
 - 可选的实时收件能力
 - 可选的实时发件能力
 
+### 技能目录
+
+安装器会把插件自带的技能一并装进 DSH。重启 DSH 后，模型能直接用这 4 个中文技能：
+
+| 技能 | 用途 |
+| --- | --- |
+| `postbird-campus-office` | 校园场景总入口，帮你选工作流和工具 |
+| `postbird-action` | 从邮件提取待办、截止时间与证据 |
+| `postbird-delivery` | 起草与投递回复、群发，走预览—确认流程 |
+| `postbird-evidence` | 读 Office / PDF 附件并标注来源 |
+
+技能由插件在启动时通过 `ctx.skills.registerProvider()` 注册，来源在插件目录的 `skills-zh/`，不依赖手工往 `~/.dsh/skills/` 里拷文件。英文原版在 `skills/`，同名时以中文版为准。
 ### 零邮箱演示
 
 ```bash

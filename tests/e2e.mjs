@@ -19,7 +19,15 @@ const ExcelJS = requireFromPlugin("exceljs");
 const { apply, Config } = await import(pathToFileURL(PLUGIN).href);
 
 const tools = [];
-apply({ tools: { register: (t) => tools.push(t) } }, Config({}));
+const skillProviders = [];
+const skillRegistry = {
+  registerProvider: (create) => {
+    const provider = create({ signal: new AbortController().signal, invalidate: () => {} });
+    skillProviders.push(provider);
+    return () => {};
+  },
+};
+apply({ tools: { register: (t) => tools.push(t) }, skills: skillRegistry }, Config({}));
 const byName = (n) => {
   const t = tools.find((t) => t.name === n);
   if (!t) throw new Error(`tool not registered: ${n}`);
@@ -711,6 +719,28 @@ ok(r27a.items.every((i) => typeof i.advice === "string" && i.advice.length > 0),
 ok(r27a.estimatedMailPerMonth > 0, "advisor estimates monthly subscription volume");
 const r27b = await cleanTool.execute({ minCount: 5, daysBack: 90 }, exec);
 ok(r27b.actionableSenders === 0 && r27b.belowThresholdCount === 3, "minCount threshold filters one-off senders");
+
+// ── 32. skills: the bundled Agent Skills reach DSH's skill registry ────────
+ok(skillProviders.length === 1, `one skill provider is registered (got ${skillProviders.length})`);
+const skillProvider = skillProviders[0];
+ok(skillProvider.name === "postbird", `provider is named postbird (got ${skillProvider.name})`);
+const skillCandidates = await skillProvider.list();
+const skillNames = skillCandidates.map((c) => c.name).sort();
+ok(
+  ["postbird-action", "postbird-campus-office", "postbird-delivery", "postbird-evidence"].every((n) =>
+    skillNames.includes(n)
+  ),
+  `all four Chinese skills are offered (got ${skillNames.join(", ")})`,
+);
+ok(
+  skillCandidates.every((c) => c.path.includes("skills-zh")),
+  "the DSH Chinese skills take precedence over the English originals"
+);
+const skillDefinition = await skillProvider.get(skillCandidates[0]);
+ok(
+  typeof skillDefinition.content === "string" && skillDefinition.content.length > 100,
+  "a skill body loads on demand"
+);
 
 delete process.env.DSH_OFFICE_HOME;
 delete process.env.DSH_IMAP_PASS;

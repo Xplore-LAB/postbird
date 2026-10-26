@@ -113,7 +113,7 @@ async function setup() {
 
   if (!dryRun && path.resolve(target) !== rootDir) {
     await fsp.mkdir(target, { recursive: true });
-    for (const item of ["lib", "scripts", "example", "docs", "package.json", "README.md", "README.en.md", "LICENSE", "SECURITY.md"]) {
+    for (const item of ["lib", "scripts", "skills", "skills-zh", "example", "docs", "package.json", "README.md", "README.en.md", "SKILL.md", "LICENSE", "SECURITY.md"]) {
       const source = path.join(rootDir, item);
       if (await exists(source)) {
         await fsp.cp(source, path.join(target, item), { recursive: true, force: true });

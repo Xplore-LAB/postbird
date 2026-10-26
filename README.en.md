@@ -11,7 +11,7 @@
 [![Quick Start](https://img.shields.io/badge/Quick%20Start-Five%20Minutes-9f86ff?style=for-the-badge)](#five-minute-start)
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
-[![release](https://img.shields.io/badge/release-v1.5.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
+[![release](https://img.shields.io/badge/release-v1.7.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
 [![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#22-tools-working-together)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
@@ -150,6 +150,25 @@ Then provide the mailbox address in the DeepSeek Harness `tool-office` configura
 
 </details>
 
+## 🧠 Skills Ship With the Plugin
+
+Installing Postbird installs more than the 22 tools: it also installs the
+**working method** that goes with them. Four Chinese skills appear in DSH's
+skill catalog, telling the model when to reach for which tool and how to use it:
+
+| Skill | When it applies |
+| --- | --- |
+| `postbird-campus-office` | Campus entry point: which workflow to run, which tools to call |
+| `postbird-action` | Extracting to-dos and deadlines from mail, each with source evidence |
+| `postbird-delivery` | Drafting replies, bulk sends and delivery, with preview-then-confirm |
+| `postbird-evidence` | Reading Word / PPT / Excel / PDF attachments with citations |
+
+The skill files live in `skills-zh/` (the DSH-adapted Chinese set); `skills/`
+keeps the original English ones, and `skills-zh/` wins on a name clash. The
+plugin registers them through `ctx.skills.registerProvider()`, so **the tools
+and their instructions ship in the same version and cannot drift apart**.
+
+Restart DSH after upgrading to pick up new skills.
 ## Safe by Default
 
 | Design | Default behavior |

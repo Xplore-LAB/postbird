@@ -1,0 +1,50 @@
+[
+  {
+    "id": "postbird-action-pos-daily",
+    "question": "帮我看看今天最重要的事情、截止日期和还在等回复的邮件。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "The agent should use the action skill to produce priorities, deadlines and waiting items, preserving evidence.",
+    "expected_behavior": ["Loads postbird-action", "Uses daily brief / action radar workflow", "Keeps source evidence with each important action"]
+  },
+  {
+    "id": "postbird-action-pos-collection",
+    "question": "统计奖学金材料谁已齐、谁缺件、谁还没交，先不要发邮件。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "The agent should route the material status problem to collection tracking and stop before delivery.",
+    "expected_behavior": ["Loads postbird-action", "Uses collection tracking", "Flags ambiguous matches for review", "Does not send mail"]
+  },
+  {
+    "id": "postbird-action-pos-followup",
+    "question": "把需要我催办、等待别人回复和本周要完成的事项分开。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "The agent should classify next actions by status and urgency.",
+    "expected_behavior": ["Loads postbird-action", "Separates follow-up, waiting and due items", "Does not invent owners or dates"]
+  },
+  {
+    "id": "postbird-action-behavior-conflict",
+    "question": "两封邮件写了不同的截止日期，告诉我下一步怎么处理。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "The action skill should surface the conflict and hand source verification to evidence review instead of choosing one silently.",
+    "expected_behavior": ["Loads postbird-action", "Surfaces both conflicting deadlines", "Routes source verification to postbird-evidence"]
+  },
+  {
+    "id": "postbird-action-neg-pure-source",
+    "question": "附件第 3 页关于匿名版本的原文要求是什么？",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "This is a source verification request, not an action-planning request.",
+    "expected_behavior": ["Does not select postbird-action as the primary skill", "Routes to postbird-evidence"]
+  },
+  {
+    "id": "postbird-action-neg-pure-delivery",
+    "question": "事实已经确认，请把这份汇总生成 Excel 和一页 PPT。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "Facts are already known; the primary task is artifact delivery.",
+    "expected_behavior": ["Does not select postbird-action as the primary skill", "Routes to postbird-delivery"]
+  }
+]

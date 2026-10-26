@@ -11,7 +11,7 @@
 [![五分钟开始](https://img.shields.io/badge/五分钟开始-安装指南-9f86ff?style=for-the-badge)](#five-minute-start)
 
 [![GitHub stars](https://img.shields.io/github/stars/Xplore-LAB/postbird?style=flat&label=stars&color=gold)](https://github.com/Xplore-LAB/postbird/stargazers)
-[![release](https://img.shields.io/badge/release-v1.5.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
+[![release](https://img.shields.io/badge/release-v1.7.0-1683c4)](https://github.com/Xplore-LAB/postbird/releases)
 [![tests](https://img.shields.io/badge/checks-npm%20test-32b643)](tests/)
 [![tools](https://img.shields.io/badge/tools-22-7e35d5)](#all-tools)
 [![license](https://img.shields.io/badge/license-MIT-1683c4)](LICENSE)
@@ -191,6 +191,20 @@ node scripts/postbird.mjs setup --help
 
 </details>
 
+## 🧠 技能随插件一起装
+
+装上 Postbird，装的不只是 22 个工具，还有一整套**随插件分发的工作方法**。DSH 的技能目录里会多出 4 个中文技能，模型据此判断什么时候该用哪个工具、该怎么用：
+
+| 技能 | 什么时候用 |
+| --- | --- |
+| `postbird-campus-office` | 校园场景总入口：判断该走哪条工作流、该调哪些工具 |
+| `postbird-action` | 从邮件里提取待办与截止时间，每一条都带原文证据 |
+| `postbird-delivery` | 起草回复、群发与投递，坚持"预览 → 确认"两步走 |
+| `postbird-evidence` | 读 Word / PPT / Excel / PDF 附件，结论带来源标注 |
+
+技能文件放在 `skills-zh/`（面向 DSH 的中文适配版），`skills/` 保留原始英文版；同名时以 `skills-zh/` 为准。插件通过 `ctx.skills.registerProvider()` 把它们注册进 DSH 的技能注册表——**工具和用法说明同版本发布，不会走散**。
+
+升级插件后重启 DSH 即可看到新技能。
 ## 🛡️ 安全可控
 
 | 设计 | 默认行为 |

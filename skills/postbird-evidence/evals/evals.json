@@ -1,0 +1,50 @@
+[
+  {
+    "id": "postbird-evidence-pos-attachment",
+    "question": "附件里报名截止时间和文件命名要求分别在哪一页？",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "The agent should read the attachment and return claims with page-level locators.",
+    "expected_behavior": ["Loads postbird-evidence", "Uses attachment reading", "Returns page or equivalent locator", "Does not fabricate a citation"]
+  },
+  {
+    "id": "postbird-evidence-pos-thread",
+    "question": "导师前几封邮件里到底承诺了什么？把依据一起给我。",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "The agent should reconstruct thread context and tie each claim to messages/evidence.",
+    "expected_behavior": ["Loads postbird-evidence", "Uses thread context", "Links claims to source messages"]
+  },
+  {
+    "id": "postbird-evidence-pos-verify",
+    "question": "核一下这个提醒里写的 9 月 30 日是不是原通知中的真实截止日期。",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "The agent should verify the proposed date against original evidence before approving the reminder.",
+    "expected_behavior": ["Loads postbird-evidence", "Checks original source", "Reports verified/unverified rather than assuming"]
+  },
+  {
+    "id": "postbird-evidence-behavior-conflict",
+    "question": "PDF 和邮件正文的要求冲突，帮我列出冲突点和出处。",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "The agent should preserve both sources and report the conflict explicitly.",
+    "expected_behavior": ["Loads postbird-evidence", "Returns both source locators", "Does not silently merge conflicting facts"]
+  },
+  {
+    "id": "postbird-evidence-neg-action",
+    "question": "从今天的收件箱里排出最重要的五件事。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "This is primarily an action prioritization request.",
+    "expected_behavior": ["Does not select postbird-evidence as the primary skill", "Routes to postbird-action"]
+  },
+  {
+    "id": "postbird-evidence-neg-delivery",
+    "question": "已确认这些数据正确，把它们排成一份 Word 情况汇报。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "The primary task is document delivery from already verified facts.",
+    "expected_behavior": ["Does not select postbird-evidence as the primary skill", "Routes to postbird-delivery"]
+  }
+]

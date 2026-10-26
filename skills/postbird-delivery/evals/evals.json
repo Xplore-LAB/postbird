@@ -1,0 +1,50 @@
+[
+  {
+    "id": "postbird-delivery-pos-files",
+    "question": "把已经确认的报名数据生成 Excel 汇总、Word 情况说明和一页会议 PPT。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "The agent should generate usable Office deliverables and verify file paths before claiming completion.",
+    "expected_behavior": ["Loads postbird-delivery", "Uses sheet/docx/pptx tools", "Verifies generated files exist"]
+  },
+  {
+    "id": "postbird-delivery-pos-reply",
+    "question": "依据刚才核验过的线程，帮我起草一封正式回复，但不要发送。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "The agent should draft a reply from verified context and stop before sending.",
+    "expected_behavior": ["Loads postbird-delivery", "Uses context-aware reply workflow", "Does not send mail"]
+  },
+  {
+    "id": "postbird-delivery-pos-preview",
+    "question": "给缺材料的同学准备个性化提醒，先让我看收件人、主题和附件。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "The agent should create a mail preview and require human confirmation before any send.",
+    "expected_behavior": ["Loads postbird-delivery", "Uses mail preview", "Shows recipients/content/attachments", "Does not send without confirmation"]
+  },
+  {
+    "id": "postbird-delivery-behavior-send",
+    "question": "我确认刚才那个 preview，按原样发送。",
+    "expected_skill": "postbird-delivery",
+    "expected_script": null,
+    "ground_truth": "The agent may send only if the exact persisted preview and explicit confirmation are available.",
+    "expected_behavior": ["Loads postbird-delivery", "Checks exact preview identity", "Sends only after explicit confirmation"]
+  },
+  {
+    "id": "postbird-delivery-neg-evidence",
+    "question": "这份 PDF 里对格式要求的原文和页码是什么？",
+    "expected_skill": "postbird-evidence",
+    "expected_script": null,
+    "ground_truth": "This is evidence retrieval, not artifact delivery.",
+    "expected_behavior": ["Does not select postbird-delivery as the primary skill", "Routes to postbird-evidence"]
+  },
+  {
+    "id": "postbird-delivery-neg-action",
+    "question": "我有很多邮件，先告诉我哪些事情今天必须做。",
+    "expected_skill": "postbird-action",
+    "expected_script": null,
+    "ground_truth": "This is prioritization; no deliverable should be created before the actions are known.",
+    "expected_behavior": ["Does not select postbird-delivery as the primary skill", "Routes to postbird-action"]
+  }
+]

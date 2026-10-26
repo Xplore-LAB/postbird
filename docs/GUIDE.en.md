@@ -48,6 +48,22 @@ npm run doctor -- --profile web
 
 The doctor checks Node.js, plugin files, dependencies, DSH registration, local office tools, optional inbox access, and optional outbound delivery.
 
+### Skill Catalog
+
+The installer ships Postbird's own skills along with the plugin. After a DSH
+restart the model can use these four Chinese skills directly:
+
+| Skill | Purpose |
+| --- | --- |
+| `postbird-campus-office` | Campus entry point for choosing a workflow and its tools |
+| `postbird-action` | Extracting to-dos, deadlines and evidence from mail |
+| `postbird-delivery` | Drafting and delivering replies and bulk sends, preview first |
+| `postbird-evidence` | Reading Office / PDF attachments with citations |
+
+The plugin registers them at startup through `ctx.skills.registerProvider()`.
+They come from the plugin's own `skills-zh/` directory, so nothing has to be
+hand-copied into `~/.dsh/skills/`. The English originals stay in `skills/`
+and the Chinese set wins on a name clash.
 ### Mailbox-free Demo
 
 ```bash
