@@ -46,6 +46,31 @@
 
 每个判断都能回到原邮件或附件位置。任何邮件发送都要经过预览和明确确认。
 
+<a id="why-different"></a>
+
+## 🧬 和别人的不同：不是「读邮件」，是「可复核地交付工作」
+
+**一句话定位：Postbird 是 DSH 原生插件里，把「只读收件 → 带证据的判断 → 人在回路的发信 → 真实 Office 文件」做成同一条闭环的工具集。**
+
+| | 通用 AI 邮件助手 | 邮件 MCP server | 规则自动化 | **Postbird** |
+| --- | --- | --- | --- | --- |
+| 典型代表 | Inbox Zero、Superhuman | Gmail-MCP-Server | n8n 工作流 | — |
+| 交付落点 | 标签、草稿、归档 | 工具返回值 | 转发 / webhook | **本机 `.eml / .csv / .xlsx / .docx / .pptx`** |
+| 判断依据 | 模型总结 | 原始邮件内容 | 关键词 / 正则 | **规则证据 + 附件页 / 段 / 行级引用** |
+| 发信动作 | 自动或一键确认 | 普通工具 `send_email` | 自动 | **`previewId` + `confirm:true` + TTL；默认草稿模式物理上不能发** |
+| 收件副作用 | 会标已读、归档、退订 | 取决于 OAuth scope | 视流程而定 | **严格 `BODY.PEEK` 只读，不提供删除 / 移动工具** |
+| 用法与能力同版本 | 无关 | 无 | 无关 | **4 个中文技能经 `registerProvider()` 与 22 个工具一起发布** |
+| 数据边界 | 云端 / API | 本地进程 | 云端 | **索引只存元数据与短摘要，正文按需读取且不落盘** |
+
+**四个刻意做出的取舍**：
+
+- **不代你发信** —— 预览与显式确认写进工具协议，不是写进提示词；
+- **不替你处置邮箱** —— 收件只读、无删除 / 移动工具、清理只给建议；
+- **不说没出处的话** —— 行动项与附件结论都能回到原邮件或页 / 段 / 行；
+- **不把工具和方法分开** —— 技能随插件发布，升级后不会出现「工具变了、说明书还是旧的」。
+
+完整版见 [竞品对比](docs/COMPETITORS.zh-CN.md)；每一条设计背后的替代方案与代价见 [设计决策记录](docs/DESIGN_DECISIONS.md)。
+
 <a id="campus-scenes"></a>
 
 ## 🎓 七类校园身份，一句话进入工作状态
@@ -131,6 +156,15 @@ Postbird 将邮件理解、行动管理和 Office 交付放进同一个对话入
 <a id="five-minute-start"></a>
 
 ## 🚀 五分钟开始
+
+| 运行契约 | 值 |
+| --- | --- |
+| 包名 / 版本 | `@local/dsh-plugin-office` v1.8.0 |
+| 运行时 | Node.js ≥ 20（ESM） |
+| 宿主依赖 | `@deepseek-ai/dsh-tools >=0.1.0-rc.6`、`@deepseek-ai/schemastery >=1.0.0` |
+| 安装落点 | `~/.dsh/profiles/<profile>/node_modules/@local/dsh-plugin-office` |
+| 注册方式 | 写进 `cordis.patch.yml` 的 `tool-office` 配置项 |
+| 多配置 | `npm run setup -- --profile web`，或用 `DSH_HOME` 指定 home |
 
 ### 1. 安装
 
@@ -223,7 +257,33 @@ node scripts/postbird.mjs setup --help
 | 人工校正 | 材料状态与低置信度判断可以复核，确认结果会被保留 |
 | 凭据隔离 | 授权码从环境变量读取，不进入代码仓库 |
 
-详细威胁模型和边界见[安全策略](SECURITY.md)。
+详细威胁模型、已修复漏洞记录与漏洞上报流程见 [安全策略](SECURITY.md)；每条设计背后的替代方案与代价见 [设计决策记录](docs/DESIGN_DECISIONS.md)。
+
+### 护栏是代码，不是提示词
+
+| 护栏 | 默认值 | 强制位置 |
+| --- | --- | --- |
+| 发信两阶段 | `previewId` + `confirm: true` | `office_mail_send` 入参校验 |
+| 预览有效期 | 60 分钟 TTL | 预览状态，过期作废 |
+| 默认草稿模式 | 无 SMTP 凭据时只写 `.eml` | 发送通道 |
+| 单批 / 24h 上限 | 50 封 / 200 封 | 审计日志滚动统计 |
+| 发送节流 / 域名白名单 | 1500 ms / 默认关闭 | 发送循环 |
+| 收件人去重、缺字段整批失败 | 开启 | 预览生成 |
+| 附件与图片路径 | 必须落在 `workDir` 内 | 路径解析，逃逸即拦截 |
+| 邮件头注入 | 剥除 CR / LF / Tab | 模板渲染 |
+| 输出文件 | 默认拒绝覆盖 | 文件写入 |
+| 收件 | `BODY.PEEK`，无删除 / 移动工具 | IMAP 客户端 |
+
+**已修复并留档**：v1.1.1 修复了附件路径逃逸（高）、pptx 图片路径逃逸（高）、CRLF 头注入（中）、缺少发送总量护栏（中）四项，均有端到端回归用例。
+
+### 怎么验证
+
+| 命令 | 覆盖 |
+| --- | --- |
+| `npm test` | 4 个套件，含 748 行 e2e（22 个工具、安全边界、技能注册链路） |
+| `npm run test:dsh-mail` | DSH 发件链路专项 |
+| `npm run doctor` | 插件文件与 `cordis.patch.yml` 注册状态 |
+| `npm run demo` | 免邮箱、免登录的静态工作流 |
 
 工具输出会进入当前 DeepSeek Harness Agent 上下文。处理敏感邮件前，请确认所选运行时与模型符合你的数据要求。
 
@@ -242,6 +302,8 @@ node scripts/postbird.mjs setup --help
 | [产品介绍](docs/PRODUCT-INTRO.zh-CN.md) | 产品定位、校园价值与能力边界 |
 | [邮件场景](docs/MAIL-SCENARIOS.zh-CN.md) | 七类校园身份与典型工作流 |
 | [学生工作场景](docs/STUDENT-WORK-SCENARIOS.zh-CN.md) | 招新、报名、活动材料、审批、签到、报销、年审与换届交接 |
+| [设计决策记录](docs/DESIGN_DECISIONS.md) | 10 条架构决策：替代方案、理由与代价 |
+| [安全策略](SECURITY.md) | 威胁模型、已修复漏洞与上报流程 |
 | [竞品分析](docs/COMPETITORS.zh-CN.md) | 市场定位与差异化 |
 | [推广策略](docs/STRATEGY.zh-CN.md) | 对外传播与增长策略 |
 

@@ -46,6 +46,22 @@ Open the [Postbird Live Demo](https://xplore-lab.github.io/postbird/demo/), choo
 
 Every conclusion links back to its source. Outbound email always requires a preview and explicit confirmation.
 
+## Why Postbird is different
+
+**One line:** Postbird is the DSH-native plugin that closes the loop from a read-only inbox, to cited judgement, to human-in-the-loop sending, to real Office files on disk.
+
+| | Typical AI mail assistant | Mail MCP server | **Postbird** |
+| --- | --- | --- | --- |
+| Deliverable | Labels, drafts, archiving | Tool return values | **Local `.eml / .csv / .xlsx / .docx / .pptx`** |
+| Evidence | Model summary | Raw message | **Rule evidence plus page / paragraph / row citations** |
+| Sending | Automatic or one click | A plain `send_email` tool | **`previewId` + `confirm: true` + TTL; draft mode cannot send** |
+| Inbox side effects | Marks read, archives, unsubscribes | Scope dependent | **Strict `BODY.PEEK`; no delete or move tool exists** |
+| Method ships with capability | n/a | n/a | **4 Chinese skills via `registerProvider()` alongside 22 tools** |
+
+Four deliberate constraints: it never sends without a confirmation encoded in the tool contract; it never disposes of mail on your behalf; every claim points back to source evidence; and tools ship at the same version as their usage instructions.
+
+See the [competitive analysis](docs/COMPETITORS.zh-CN.md) and the [design decisions](docs/DESIGN_DECISIONS.md).
+
 ## Seven Campus Roles
 
 | Role | Say this | Postbird delivers |
@@ -183,6 +199,19 @@ Restart DSH after upgrading to pick up new skills.
 | Human correction | Collection status and low-confidence decisions remain reviewable |
 | Isolated credentials | App passwords come from environment variables and stay out of the repository |
 
+### Guardrails are code, not prompts
+
+Two-phase send (`previewId` + `confirm: true`), a 60-minute preview TTL, draft-by-default (without SMTP credentials there is no physical send path), a 50-per-batch / 200-per-24h cap, 1500 ms pacing, an optional domain allowlist, recipient deduplication, `workDir` path jails, CRLF header stripping, and no-overwrite-by-default output. v1.1.1 fixed four recorded vulnerabilities (attachment path escape, pptx image path escape, CRLF header injection, missing send caps), each with end-to-end regression coverage.
+
+| Verify | Command |
+| --- | --- |
+| 4 suites; 748-line e2e covering all 22 tools, security boundaries and the skill provider | `npm test` |
+| DSH send path | `npm run test:dsh-mail` |
+| Installed files and `cordis.patch.yml` registration | `npm run doctor` |
+| Mailbox-free workflow demo | `npm run demo` |
+
+Full threat model and disclosure process: [SECURITY.md](SECURITY.md). Architectural trade-offs: [DESIGN_DECISIONS.md](docs/DESIGN_DECISIONS.md).
+
 See the [security policy](SECURITY.md) for the threat model and detailed boundaries.
 
 Tool output enters the active DeepSeek Harness agent context. Before processing sensitive mail, confirm that your selected runtime and model meet your data requirements.
@@ -200,6 +229,8 @@ Give every existing mailbox and local file collection a trustworthy, controllabl
 | [Product Introduction](docs/PRODUCT-INTRO.zh-CN.md) | Product direction and capability boundaries in Chinese |
 | [Mail Scenarios](docs/MAIL-SCENARIOS.zh-CN.md) | Seven campus roles and workflow examples in Chinese |
 | [Student Work Scenarios](docs/STUDENT-WORK-SCENARIOS.zh-CN.md) | Recruitment, registrations, activity materials, approvals, attendance, reimbursement, annual review, and handover |
+| [Design Decisions](docs/DESIGN_DECISIONS.md) | 10 architecture decisions with alternatives, rationale, and costs |
+| [Security Policy](SECURITY.md) | Threat model, fixed vulnerabilities, and disclosure process |
 | [Competitive Analysis](docs/COMPETITORS.zh-CN.md) | Market positioning and differentiation in Chinese |
 | [Promotion Strategy](docs/STRATEGY.zh-CN.md) | Public messaging and growth strategy in Chinese |
 
