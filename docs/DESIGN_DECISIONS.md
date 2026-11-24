@@ -12,7 +12,7 @@
 
 **状态：已落地**
 
-- **采用**：`lib/index.js` 以 `apply(ctx)` 注册 22 个工具，`ctx.skills.registerProvider()` 注册技能；依赖声明为 `peerDependencies`（`@deepseek-ai/dsh-tools`、`@deepseek-ai/schemastery`）。
+- **采用**：`lib/index.js` 以 `apply(ctx)` 注册 22 个工具，`ctx.skills.registerProvider()` 注册技能；`package.json` 以 `dsh.bundle.patch` 指向根级 `cordis.patch.yml`，因此可被 `dsh plugin add` 作为 bundle 安装；依赖声明为 `peerDependencies`（`@deepseek-ai/dsh-tools`、`@deepseek-ai/schemastery`）。
 - **放弃**：独立 Electron/Web 应用；把能力拆成独立 MCP server 再由 DSH 连接。
 - **理由**：Postbird 的价值在于「邮件理解 → 行动判断 → Office 交付」处在**同一个对话上下文**里。若做成独立应用，用户要在两个界面间搬运邮件和文件；若做成 MCP server，工具能复用，但「什么时候该用哪个工具」的工作方法会与工具分离，版本容易走散。DSH 的 "Everything is a Plugin" 允许工具、技能、配置同时注入宿主，是这个闭环最短的路径。
 - **代价**：绑定 DSH 运行时，无法直接给 Claude Code / Cursor 等其它宿主使用；宿主 API 处于 Developer Preview，破坏性变更需要跟进。仓库里的 `demo/` 是静态演示页，不是可移植的运行时。
@@ -117,6 +117,18 @@
 
 ---
 
+## D11. 包名与 bundle 的 `name` 必须同源
+
+**状态：已落地**
+
+- **采用**：`package.json` 的 `name` 定为 `dsh-postbird`；根级 `cordis.patch.yml` 的 `name` 与之逐字一致；`scripts/postbird.mjs` 与 `tests/cli.mjs` 改为从 `package.json` 动态读取包名，不再硬编码。
+- **放弃**：继续用 `@local/dsh-plugin-office`（本地 scope、npm 上不存在）；把 bundle 的 patch 行写成相对路径。
+- **理由**：DSH 的 bundle 由 pnpm 按包名链接进 profile，加载器按 `cordis.patch.yml` 里的 `name` 解析模块；插件注册表的 CI 也直接抓取仓库 `package.json` 检查 `dsh.bundle`。`@local/` 前缀只在手写 `setup` 的本地复制路径里成立，不能作为可分发标识。
+- **代价**：改名会让 v1.8.0 之前按 `node_modules/@local/dsh-plugin-office` 安装的用户需要重装，README 与两份 GUIDE 均写了迁移步骤；`dsh-plugin-office` 这个裸名在 npm 上已被占用，无法简单去掉 scope 复用。
+- **可反驳点**：若将来改为 monorepo 或多包分发，`name` 与 patch 行的强绑定要求每个子包各带一份 patch，届时应重新评估是否拆分 bundle。
+
+---
+
 ## 验证
 
 设计决策不是声明，必须有回归证据：
@@ -127,6 +139,7 @@
 | `npm run test:dsh-mail` | DSH 发件链路专项 |
 | `npm run doctor` | 插件文件与 `cordis.patch.yml` 注册状态 |
 | `npm run demo` | 免邮箱、免登录的静态工作流演示 |
+| `npm pack --dry-run` | 确认 `cordis.patch.yml`、`lib/`、`skills/`、`skills-zh/` 进入发布包；缺 patch 会「装上了但没挂上」 |
 | `npm audit` | 依赖告警；`pptxgenjs → image-size` 的两项上游未修复 DoS 已在 `office_pptx` 用扩展名白名单（仅 PNG/JPEG/GIF/SVG）挡住，并有端到端用例 |
 
 `tests/skill-provider.mjs` 专门验证 D2 的注册链路；`tests/e2e.mjs` 覆盖 D3/D6 的护栏与越界拦截。新增工具必须在 `tests/e2e.mjs` 补用例，见 AGENTS.md 约定。
@@ -137,7 +150,7 @@
 
 按性价比排序，当前已知可改进处：
 
-1. **凭据与分发**：迁到 DSH 凭据库 + 设置页登录，发布 npm 包并上架插件市场，去掉手写 `setup` 脚本（对照 D7）。
+1. **凭据与分发**：`dsh.bundle` 声明与根级 `cordis.patch.yml` 已落地（对照 D11），标准安装走 `dsh plugin add`；仍待完成的是迁到 DSH 凭据库 + 设置页登录、正式发布 npm 包、提交插件注册表条目（对照 D7）。手写 `setup` 保留为离线开发路径，不再是默认安装方式。
 2. **工具风险元数据**：为 22 个工具补结构化 `readOnlyHint` / `destructiveHint` / `idempotentHint`，让宿主能自动分级审批，而不只依赖工具描述里的文字约定。
 3. **输出校验闭环**：`office_docgen` / `office_pptx` / `office_sheet` 生成后增加「渲染 → 检查 → 再报告完成」的验证步骤（官方 Agent Skills 的 docx 技能即如此）。
 4. **规则可配置与持久看板**：把静态技能里的分诊规则外置为可编辑数据，并补「等我回 / 等对方回」的持久状态。

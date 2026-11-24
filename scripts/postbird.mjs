@@ -1,12 +1,14 @@
 #!/usr/bin/env node
 
 import fsp from "node:fs/promises";
+import { readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { fileURLToPath, pathToFileURL } from "node:url";
 
 const rootDir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const pluginName = JSON.parse(readFileSync(path.join(rootDir, "package.json"), "utf8")).name;
 const argv = process.argv.slice(2);
 const command = argv.shift() || "help";
 
@@ -66,13 +68,13 @@ async function selectProfile(home) {
 }
 
 function targetDir(home, profile) {
-  return path.join(home, "profiles", profile, "node_modules", "@local", "dsh-plugin-office");
+  return path.join(home, "profiles", profile, "node_modules", ...pluginName.split("/"));
 }
 
 async function registerPlugin(profileDir, dryRun) {
   const patchPath = path.join(profileDir, "cordis.patch.yml");
   const current = (await exists(patchPath)) ? await fsp.readFile(patchPath, "utf8") : "";
-  if (current.includes("@local/dsh-plugin-office")) {
+  if (current.includes(pluginName)) {
     return { changed: false, patchPath };
   }
   if (/\bid:\s*tool-office\b/.test(current)) {
@@ -84,7 +86,7 @@ async function registerPlugin(profileDir, dryRun) {
     "# Postbird: local-first AI office toolkit",
     "- insert:",
     "    - id: tool-office",
-    "      name: '@local/dsh-plugin-office'",
+    `      name: '${pluginName}'`,
     "",
   ].join("\n");
 
@@ -176,7 +178,19 @@ async function doctor() {
   checks.push({ ok: await exists(path.join(target, "lib", "index.js")), label: "Plugin files", required: true });
 
   const patchText = (await exists(patchPath)) ? await fsp.readFile(patchPath, "utf8") : "";
-  checks.push({ ok: patchText.includes("@local/dsh-plugin-office"), label: "DSH registration", required: true });
+  let bundleRegistered = false;
+  try {
+    const manifest = JSON.parse(await fsp.readFile(path.join(profileDir, "package.json"), "utf8"));
+    const bundles = manifest?.dsh?.profile?.bundles || [];
+    bundleRegistered = bundles.some((entry) => typeof entry === "string" && entry.includes(pluginName));
+  } catch {
+    // A profile without a manifest is still valid when registered via patch.
+  }
+  checks.push({
+    ok: patchText.includes(pluginName) || bundleRegistered,
+    label: "DSH registration (bundle layer or cordis.patch.yml)",
+    required: true,
+  });
 
   let packageJson = null;
   try {

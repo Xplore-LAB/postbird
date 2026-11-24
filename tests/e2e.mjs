@@ -1,4 +1,4 @@
-// End-to-end tests for every @local/dsh-plugin-office tool.
+// End-to-end tests for every dsh-postbird tool.
 import fsp from "node:fs/promises";
 import { existsSync } from "node:fs";
 import os from "node:os";
@@ -8,11 +8,17 @@ import { createRequire } from "node:module";
 import { execFileSync } from "node:child_process";
 
 const SOURCE = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
+const DSH_MODULES = path.join(os.homedir(), ".dsh/profiles/web/node_modules");
+// Prefer the current bundle name, but keep the pre-1.8.0 install path usable
+// during migration so a checkout without node_modules can still run the suite.
+const INSTALLED = ["dsh-postbird", path.join("@local", "dsh-plugin-office")]
+  .map((name) => path.join(DSH_MODULES, name))
+  .find((candidate) => existsSync(path.join(candidate, "lib", "index.js")));
 const MOUNT = process.env.POSTBIRD_TEST_MOUNT
   ? path.resolve(process.env.POSTBIRD_TEST_MOUNT)
   : existsSync(path.join(SOURCE, "node_modules"))
     ? SOURCE
-    : path.join(os.homedir(), ".dsh/profiles/web/node_modules/@local/dsh-plugin-office");
+    : (INSTALLED || path.join(DSH_MODULES, "dsh-postbird"));
 const PLUGIN = path.join(MOUNT, "lib/index.js");
 const requireFromPlugin = createRequire(pathToFileURL(path.join(MOUNT, "package.json")).href);
 const ExcelJS = requireFromPlugin("exceljs");

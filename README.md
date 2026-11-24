@@ -159,28 +159,40 @@ Postbird 将邮件理解、行动管理和 Office 交付放进同一个对话入
 
 | 运行契约 | 值 |
 | --- | --- |
-| 包名 / 版本 | `@local/dsh-plugin-office` v1.8.0 |
+| 包名 / 版本 | `dsh-postbird` v1.8.0 |
 | 运行时 | Node.js ≥ 20（ESM） |
 | 宿主依赖 | `@deepseek-ai/dsh-tools >=0.1.0-rc.6`、`@deepseek-ai/schemastery >=1.0.0` |
-| 安装落点 | `~/.dsh/profiles/<profile>/node_modules/@local/dsh-plugin-office` |
-| 注册方式 | 写进 `cordis.patch.yml` 的 `tool-office` 配置项 |
-| 多配置 | `npm run setup -- --profile web`，或用 `DSH_HOME` 指定 home |
+| bundle 声明 | `package.json` → `dsh.bundle.patch` → `cordis.patch.yml` |
+| 安装落点 | `~/.dsh/profiles/<profile>/node_modules/dsh-postbird` |
+| 注册方式 | DSH 自动追加到 `dsh.profile.bundles`；配置行 `id: tool-office` |
 
 ### 1. 安装
 
 ```bash
-git clone https://github.com/Xplore-LAB/postbird.git
-cd postbird
-npm run setup
+dsh plugin --profile web add dsh-postbird
 ```
 
-安装器会发现 DeepSeek Harness 配置、安装依赖并注册插件。
+尚未发布 npm 包时，直接从仓库安装：
+
+```bash
+dsh plugin --profile web add github:Xplore-LAB/postbird
+```
+
+DSH 会把包装进 profile，并把 `dsh-postbird` 追加到 `dsh.profile.bundles`。重启 DSH 后，用下面这条确认 bundle 配置层已生效（输出里应出现 `# == dsh-postbird`）：
+
+```bash
+dsh --profile web --dump-config
+```
 
 ### 2. 检查
 
+在仓库副本里可运行完整自检：
+
 ```bash
-npm run doctor
+npm run doctor -- --profile web
 ```
+
+`doctor` 同时识别 bundle 安装（`dsh.profile.bundles`）与手动安装（`cordis.patch.yml`）两种注册方式。
 
 ### 3. 直接说出目标
 
@@ -206,22 +218,24 @@ export DSH_SMTP_PASS="your-app-password"
 
 随后在 DeepSeek Harness 的 `tool-office` 配置中填写邮箱地址。常见服务商会自动匹配服务器，完整步骤见[中文使用指南](docs/GUIDE.zh-CN.md#邮箱接入可选)。只读收件和本地分析可以单独启用，发件能力无需同时开放。
 
+> bundle 安装时，配置写在 profile 自己的 `cordis.patch.yml` 里。Cordis 的配置层按「整行替换」合并，覆盖 `tool-office` 时请把该行需要的其它配置项一并写全。
+
 </details>
 
 <details>
-<summary><strong>多配置与手动安装</strong></summary>
+<summary><strong>手动安装与多配置</strong></summary>
 
-存在多个 DeepSeek Harness 配置时：
+适用于离线开发或需要直接修改源码的场景：
 
 ```bash
+git clone https://github.com/Xplore-LAB/postbird.git
+cd postbird
 npm run setup -- --profile web
 ```
 
-需要查看安装器支持的全部选项：
+安装器会把文件复制到 `node_modules/dsh-postbird`、安装依赖并写入 `cordis.patch.yml`，修改前自动备份。`DSH_HOME` 可指定其它 home 目录，全部选项见 `node scripts/postbird.mjs setup --help`。
 
-```bash
-node scripts/postbird.mjs setup --help
-```
+从 v1.8.0 之前的 `@local/dsh-plugin-office` 升级时，请先删除 profile 下旧的 `node_modules/@local/dsh-plugin-office` 目录以及 `cordis.patch.yml` 里的旧配置块，再按上面的方式重装。
 
 </details>
 

@@ -16,21 +16,31 @@ This guide covers installer options, optional mailbox access, all 22 tools, conf
 - DeepSeek Harness installed and launched at least once
 - macOS, Linux, or Windows
 
-### Automatic Setup
+### Standard Install (bundle)
+
+Postbird declares `dsh.bundle.patch` in `package.json`, so it installs through the DSH plugin command:
+
+```bash
+dsh plugin --profile web add dsh-postbird
+```
+
+Until the package is published on npm, install from the repository:
+
+```bash
+dsh plugin --profile web add github:Xplore-LAB/postbird
+```
+
+DSH appends `dsh-postbird` to `dsh.profile.bundles`. After restarting, confirm the layer with `dsh --profile web --dump-config` (look for `# == dsh-postbird`).
+
+### Manual Setup
 
 ```bash
 git clone https://github.com/Xplore-LAB/postbird.git
 cd postbird
-npm run setup
-```
-
-When one DeepSeek Harness profile exists, the installer selects it automatically. Select a profile explicitly when several are present:
-
-```bash
 npm run setup -- --profile web
 ```
 
-The installer copies the plugin, installs runtime dependencies, registers `tool-office`, and backs up an existing `cordis.patch.yml` before changing it.
+When one DeepSeek Harness profile exists, the installer selects it automatically. The installer copies the plugin to `node_modules/dsh-postbird`, installs runtime dependencies, registers `tool-office`, and backs up an existing `cordis.patch.yml` before changing it.
 
 Preview the setup without writing files:
 
@@ -91,7 +101,7 @@ Add account fields to the Postbird block in `~/.dsh/profiles/<profile>/cordis.pa
 ```yaml
 - insert:
     - id: tool-office
-      name: '@local/dsh-plugin-office'
+      name: 'dsh-postbird'
       config:
         imapUser: 'me@example.com'
         smtpUser: 'me@example.com'
@@ -239,7 +249,7 @@ git pull
 npm run setup -- --profile web
 ```
 
-To uninstall, remove the `tool-office` block from `cordis.patch.yml`, then remove the profile's `node_modules/@local/dsh-plugin-office` directory. Delete `~/.dsh/office/mail` only when you also want to erase local indexes, previews, drafts, and trackers.
+To uninstall, remove the `tool-office` block from `cordis.patch.yml` (or remove the bundle with `dsh plugin --profile web remove dsh-postbird`), then remove the profile's `node_modules/dsh-postbird` directory. Delete `~/.dsh/office/mail` only when you also want to erase local indexes, previews, drafts, and trackers.
 
 ## Troubleshooting
 

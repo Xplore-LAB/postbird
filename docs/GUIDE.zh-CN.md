@@ -12,23 +12,33 @@
 - 已安装并至少启动过一次 DeepSeek Harness
 - macOS、Linux 或 Windows 环境
 
-### 自动安装
+### 标准安装（bundle）
+
+Postbird 在 `package.json` 里声明了 `dsh.bundle.patch`，因此可以直接用 DSH 的插件命令安装：
+
+```bash
+dsh plugin --profile web add dsh-postbird
+```
+
+尚未发布 npm 包时，从仓库安装：
+
+```bash
+dsh plugin --profile web add github:Xplore-LAB/postbird
+```
+
+DSH 会把包追加到 `dsh.profile.bundles`。重启后用 `dsh --profile web --dump-config` 确认输出含 `# == dsh-postbird` 配置层。
+
+### 手动安装
 
 ```bash
 git clone https://github.com/Xplore-LAB/postbird.git
 cd postbird
-npm run setup
-```
-
-只有一个 DeepSeek Harness profile 时，安装器会自动选择。存在多个 profile 时指定名称：
-
-```bash
 npm run setup -- --profile web
 ```
 
-安装器会完成以下操作：
+只有一个 DeepSeek Harness profile 时，安装器会自动选择。安装器会完成以下操作：
 
-1. 把插件文件复制到选定 profile 的 `node_modules/@local/dsh-plugin-office`。
+1. 把插件文件复制到选定 profile 的 `node_modules/dsh-postbird`。
 2. 安装运行依赖。
 3. 在 `cordis.patch.yml` 中注册 `tool-office`。
 4. 修改已有配置前创建带时间戳的备份。
@@ -107,7 +117,7 @@ npm run demo -- --profile web --output ./my-postbird-demo
 ```yaml
 - insert:
     - id: tool-office
-      name: '@local/dsh-plugin-office'
+      name: 'dsh-postbird'
       config:
         imapUser: 'me@qq.com'
         smtpUser: 'me@qq.com'
@@ -296,7 +306,7 @@ npm run setup -- --profile web
 卸载步骤：
 
 1. 从 `cordis.patch.yml` 移除 `tool-office` 配置块。
-2. 删除 profile 下的 `node_modules/@local/dsh-plugin-office` 目录。
+2. 删除 profile 下的 `node_modules/dsh-postbird` 目录（旧版本为 `node_modules/@local/dsh-plugin-office`）。
 3. 如需清理运行数据，再删除 `~/.dsh/office/mail`。
 
 删除运行数据会清除本地索引、预览、草稿和台账，请先备份需要保留的文件。

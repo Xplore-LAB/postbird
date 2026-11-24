@@ -1,0 +1,7 @@
+# Postbird bundle layer for DeepSeek Harness.
+# The `name` below must match the "name" field in package.json exactly:
+# pnpm links the installed package under that name and the loader resolves
+# the module from it when the profile composes its bundle layers.
+- insert:
+    - id: tool-office
+      name: 'dsh-postbird'

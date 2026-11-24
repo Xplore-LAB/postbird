@@ -1,5 +1,5 @@
 {
-  "name": "@local/dsh-plugin-office",
+  "name": "dsh-postbird",
   "version": "1.8.0",
   "description": "A local-first campus AI inbox and office workspace for DeepSeek Harness, turning email into cited actions and finished work.",
   "type": "module",
@@ -9,6 +9,38 @@
   },
   "bin": {
     "postbird": "scripts/postbird.mjs"
+  },
+  "files": [
+    "lib/",
+    "scripts/",
+    "skills/",
+    "skills-zh/",
+    "example/",
+    "assets/brand/",
+    "cordis.patch.yml",
+    "SKILL.md",
+    "README.md",
+    "README.en.md",
+    "LICENSE",
+    "SECURITY.md",
+    "AGENTS.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Xplore-LAB/postbird.git"
+  },
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "cordis",
+    "email",
+    "office"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
   },
   "scripts": {
     "setup": "node scripts/postbird.mjs setup",

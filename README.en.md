@@ -134,14 +134,27 @@ You can keep using natural language. Postbird composes these tools for each task
 
 ## Five-Minute Start
 
+Install as a DSH bundle:
+
 ```bash
-git clone https://github.com/Xplore-LAB/postbird.git
-cd postbird
-npm run setup
-npm run doctor
+dsh plugin --profile web add dsh-postbird
 ```
 
-Restart DeepSeek Harness and describe an outcome:
+Until the package is published on npm, install straight from the repository:
+
+```bash
+dsh plugin --profile web add github:Xplore-LAB/postbird
+```
+
+DSH adds `dsh-postbird` to `dsh.profile.bundles`. Restart the harness, then confirm the layer is present (`# == dsh-postbird`):
+
+```bash
+dsh --profile web --dump-config
+```
+
+For a full self-check, run `npm run doctor -- --profile web` from a repository checkout. `doctor` recognizes both bundle registration and the manual `cordis.patch.yml` path.
+
+Describe an outcome:
 
 ```text
 Read this registration sheet, summarize it by department,
@@ -153,6 +166,21 @@ Try the local Office workflow without a mailbox:
 ```bash
 npm run demo
 ```
+
+<details>
+<summary><strong>Manual install and multiple profiles</strong></summary>
+
+Use this path for offline development or when editing the source directly:
+
+```bash
+git clone https://github.com/Xplore-LAB/postbird.git
+cd postbird
+npm run setup -- --profile web
+```
+
+The installer copies files to `node_modules/dsh-postbird`, installs dependencies, and writes `cordis.patch.yml` after backing it up. Upgrading from the pre-1.8.0 `@local/dsh-plugin-office` layout: remove the old `node_modules/@local/dsh-plugin-office` directory and its patch block first.
+
+</details>
 
 <details>
 <summary><strong>Connect a real mailbox, optional</strong></summary>
