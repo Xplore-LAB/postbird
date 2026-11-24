@@ -60,7 +60,7 @@ Every conclusion links back to its source. Outbound email always requires a prev
 
 Four deliberate constraints: it never sends without a confirmation encoded in the tool contract; it never disposes of mail on your behalf; every claim points back to source evidence; and tools ship at the same version as their usage instructions.
 
-See the [competitive analysis](docs/COMPETITORS.zh-CN.md) and the [design decisions](docs/DESIGN_DECISIONS.md).
+See the [design decisions](docs/DESIGN_DECISIONS.md) for the alternatives and costs behind each choice.
 
 ## Seven Campus Roles
 
@@ -231,7 +231,6 @@ Give every existing mailbox and local file collection a trustworthy, controllabl
 | [Student Work Scenarios](docs/STUDENT-WORK-SCENARIOS.zh-CN.md) | Recruitment, registrations, activity materials, approvals, attendance, reimbursement, annual review, and handover |
 | [Design Decisions](docs/DESIGN_DECISIONS.md) | 10 architecture decisions with alternatives, rationale, and costs |
 | [Security Policy](SECURITY.md) | Threat model, fixed vulnerabilities, and disclosure process |
-| [Competitive Analysis](docs/COMPETITORS.zh-CN.md) | Market positioning and differentiation in Chinese |
 | [Promotion Strategy](docs/STRATEGY.zh-CN.md) | Public messaging and growth strategy in Chinese |
 
 ## Acknowledgements

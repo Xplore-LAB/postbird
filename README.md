@@ -69,7 +69,7 @@
 - **不说没出处的话** —— 行动项与附件结论都能回到原邮件或页 / 段 / 行；
 - **不把工具和方法分开** —— 技能随插件发布，升级后不会出现「工具变了、说明书还是旧的」。
 
-完整版见 [竞品对比](docs/COMPETITORS.zh-CN.md)；每一条设计背后的替代方案与代价见 [设计决策记录](docs/DESIGN_DECISIONS.md)。
+每一条设计背后的替代方案与代价见 [设计决策记录](docs/DESIGN_DECISIONS.md)。
 
 <a id="campus-scenes"></a>
 
@@ -304,7 +304,6 @@ node scripts/postbird.mjs setup --help
 | [学生工作场景](docs/STUDENT-WORK-SCENARIOS.zh-CN.md) | 招新、报名、活动材料、审批、签到、报销、年审与换届交接 |
 | [设计决策记录](docs/DESIGN_DECISIONS.md) | 10 条架构决策：替代方案、理由与代价 |
 | [安全策略](SECURITY.md) | 威胁模型、已修复漏洞与上报流程 |
-| [竞品分析](docs/COMPETITORS.zh-CN.md) | 市场定位与差异化 |
 | [推广策略](docs/STRATEGY.zh-CN.md) | 对外传播与增长策略 |
 
 ## 🙏 致谢
